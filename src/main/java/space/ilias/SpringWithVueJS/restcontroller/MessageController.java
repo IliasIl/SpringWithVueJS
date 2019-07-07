@@ -1,75 +1,55 @@
 package space.ilias.SpringWithVueJS.restcontroller;
 
+import com.fasterxml.jackson.annotation.JsonView;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import space.ilias.SpringWithVueJS.domain.Message;
+import space.ilias.SpringWithVueJS.domain.Views;
 import space.ilias.SpringWithVueJS.exceptions.NotFoundException;
+import space.ilias.SpringWithVueJS.repo.MessageRepo;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/message")
 public class MessageController {
 
-    private static int index = 5;
-    private static List<Map<String, String>> simpleDB = new ArrayList<Map<String, String>>() {{
-        add(new HashMap<String, String>() {{
-            put("id", "1");
-            put("text", "first");
-        }});
-        add(new HashMap<String, String>() {{
-            put("id", "2");
-            put("text", "second");
-        }});
-        add(new HashMap<String, String>() {{
-            put("id", "3");
-            put("text", "third");
-        }});
-        add(new HashMap<String, String>() {{
-            put("id", "4");
-            put("text", "forth");
-        }});
-    }};
+    @Autowired
+    private MessageRepo messageRepo;
     @Autowired
     private NotFoundException notFound;
 
     @GetMapping
-    public List<Map<String, String>> allMessages() {
-        return simpleDB;
+    @JsonView(Views.IdName.class)
+    public List<Message> allMessages() {
+        return messageRepo.findAll();
     }
 
+    @JsonView(Views.Full.class)
     @GetMapping("/{id}")
-    public Map<String, String> showMessage(@PathVariable("id") String id) {
-        Map<String, String> message = getStringStringMap(id);
+    public Message showMessage(@PathVariable("id") Message message) {
         return message;
     }
 
-    private Map<String, String> getStringStringMap(@PathVariable("id") String id) {
-        return simpleDB
-                .stream().filter(elem -> elem.get("id").equals(id)).findFirst().orElseThrow(() -> notFound);
-    }
-
+    @JsonView(Views.Full.class)
     @PostMapping
-    public Map<String, String> createMes(@RequestBody Map<String, String> mes) {
-        mes.put("id", String.valueOf(index++));
-        simpleDB.add(mes);
-        return mes;
+    public Message createMes(@RequestBody Message message) {
+        message.setCreationDate(LocalDateTime.now());
+        return messageRepo.save(message);
     }
 
+    @JsonView(Views.IdName.class)
     @PutMapping("/{id}")
-    public Map<String, String> editMes(@PathVariable String id, @RequestBody Map<String, String> mes) {
-        Map<String, String> message = getStringStringMap(id);
-        message.putAll(mes);
-        message.put("id", id);
-        return message;
+    public Message editMes(@PathVariable("id") Message message, @RequestBody Message messageNew) {
+        BeanUtils.copyProperties(messageNew, message, "id");
+        return messageRepo.save(message);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteMap(@PathVariable String id) {
-        Map<String, String> message = getStringStringMap(id);
-        simpleDB.remove(message);
+    public void deleteMap(@PathVariable("id") Message message) {
+        messageRepo.delete(message);
     }
 
 }
