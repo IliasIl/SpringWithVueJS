@@ -97,10 +97,16 @@ Vue.component('message-list', {
 var app = new Vue({
     el: '#app',
     template: '<div>' +
-        '<message-list :messages="messages"></message-list>' +
+        '<div v-if="!profile">Необходимо войти через <a href="/login">Google</a></div>' +
+        '<div v-else>' +
+        '<div>{{profile.name}}&nbsp;<a href="/logout">Выйти</a></div>' +
+        '<message-list :messages="messages"/>' +
+        '</div>' +
         '</div>',
     data: {
-        messages: valuesMas.mes,
-        profile: valuesMas.profile
+        profile: valuesMas.profile,
+        messages: valuesMas.messages
+    },
+    created: function () {
     }
 });
