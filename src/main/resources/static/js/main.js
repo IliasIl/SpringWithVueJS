@@ -37,8 +37,8 @@ Vue.component('message-form', {
                         .then(res => {
                                 var index = getIndex(this.messages, this.id);
                                 this.messages.splice(index, 1, res);
-                                this.id='';
-                                this.text='';
+                                this.id = '';
+                                this.text = '';
                             }
                         ));
 
@@ -49,7 +49,6 @@ Vue.component('message-form', {
             }
         }
     }
-
 });
 
 Vue.component('message-row', {
@@ -97,12 +96,17 @@ Vue.component('message-list', {
 
 var app = new Vue({
     el: '#app',
-    template: '<message-list :messages="messages"></message-list>',
+    template: '<div>' +
+        '<div v-if="!profile">Необходимо войти через <a href="/login">Google</a></div>' +
+        '<div v-else>' +
+        '<div>{{profile.name}}&nbsp;<a href="/logout">Выйти</a></div>' +
+        '<message-list :messages="messages"/>' +
+        '</div>' +
+        '</div>',
     data: {
-        messages: []
+        profile: valuesMas.profile,
+        messages: valuesMas.messages
     },
     created: function () {
-        res.get().then(result => result.json()
-            .then(data => data.forEach(mes => this.messages.push(mes))));
     }
 });
