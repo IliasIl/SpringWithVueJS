@@ -2,6 +2,7 @@ package space.ilias.SpringWithVueJS.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,6 +19,10 @@ import java.util.List;
 @Controller
 @RequestMapping("/")
 public class MainController {
+    @Value("${spring.profiles.active}")
+    private String mod;
+
+
     @Autowired
     private MessageRepo messageRepo;
 
@@ -27,8 +32,9 @@ public class MainController {
         User user1 = user != null ? user : null;
         values.put("profile", (Object) user1);
         List<Message> mes= messageRepo.findAll()!=null? messageRepo.findAll():null;
-        values.put("messages", mes);
+        values.put("components", mes);
         model.addAttribute("values", values);
+        model.addAttribute("isDeveloperMode", "dev".equals(mod));
         return "index";
     }
 }

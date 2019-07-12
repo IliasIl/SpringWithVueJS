@@ -1,5 +1,25 @@
 {
+  "name": "SpringWithVueJS",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/IliasIl/SpringWithVueJS.git",
+  "author": "Ilias <cossin90@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "start": "webpack-dev-server"
+  },
+  "dependencies": {
+    "vue": "^2.6.10",
+    "vue-resource": "^1.5.1"
+  },
   "devDependencies": {
-    "webpack": "^4.35.3"
+    "@babel/core": "^7.5.4",
+    "@babel/preset-env": "^7.5.4",
+    "babel-loader": "^8.0.6",
+    "vue-loader": "^15.7.0",
+    "vue-template-compiler": "^2.6.10",
+    "webpack": "^4.35.3",
+    "webpack-cli": "^3.3.5",
+    "webpack-dev-server": "^3.7.2"
   }
 }
