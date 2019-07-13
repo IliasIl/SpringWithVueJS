@@ -32,7 +32,7 @@ public class MainController {
         User user1 = user != null ? user : null;
         values.put("profile", (Object) user1);
         List<Message> mes= messageRepo.findAll()!=null? messageRepo.findAll():null;
-        values.put("components", mes);
+        values.put("comp", mes);
         model.addAttribute("values", values);
         model.addAttribute("isDeveloperMode", "dev".equals(mod));
         return "index";

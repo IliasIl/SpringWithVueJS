@@ -10,6 +10,7 @@
 
 <script>
     import MessageList from 'components/MessageList.vue'
+
     export default {
         components: {
             MessageList
@@ -17,12 +18,13 @@
         data() {
             return {
                 profile: valuesMas.profile,
-                messages: valuesMas.messages
+                messages: valuesMas.comp
             }
         }
     }
 </script>
 
 <style>
+
 
 </style>
