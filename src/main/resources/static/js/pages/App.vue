@@ -10,6 +10,8 @@
 
 <script>
     import MessageList from 'components/MessageList.vue'
+    import {addHandler} from 'util/ws'
+    import {getIndex} from 'util/collections'
 
     export default {
         components: {
@@ -20,11 +22,20 @@
                 profile: valuesMas.profile,
                 messages: valuesMas.comp
             }
+        },
+        created() {
+            addHandler(data => {
+                    let index = getIndex(this.messages, data.id)
+                    if (index > -1) {
+                    this.messages.splice(index, 1, data)
+                    } else{
+                        this.messages.push(data)
+                    }
+                }
+            )
         }
     }
 </script>
 
 <style>
-
-
 </style>
