@@ -3,6 +3,8 @@ package space.ilias.SpringWithVueJS.restcontroller;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.*;
 import space.ilias.SpringWithVueJS.domain.Message;
 import space.ilias.SpringWithVueJS.domain.Views;
@@ -52,4 +54,9 @@ public class MessageController {
         messageRepo.delete(message);
     }
 
+    @MessageMapping("/changeMes")
+    @SendTo("/topic/activity")
+    public Message changeMes(Message message) {
+        return messageRepo.save(message);
+    }
 }
