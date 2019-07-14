@@ -6,6 +6,11 @@
 </template>
 
 <script>
+
+    import {sendMessage} from 'util/ws'
+    import {getIndex} from 'util/collections'
+
+
     export default {
         props: ['messages', 'messageA'],
         data() {
@@ -23,9 +28,13 @@
         },
         methods: {
             save() {
-                var mes = {text: this.text};
+                sendMessage({id:this.id, text:this.text})
+                this.id=''
+                this.text=''
+                /*
+                const mes = {text: this.text};
                 if (this.id) {
-                    res.update({id: this.id}, mes)
+                    this.$resource('/message{/id}').update({id: this.id}, mes)
                         .then(result => result.json()
                             .then(res => {
                                     var index = getIndex(this.messages, this.id);
@@ -36,10 +45,10 @@
                             ));
 
                 } else {
-                    res.save({}, mes)
+                    this.$resource('/message{/id}').save({}, mes)
                         .then(result => result.json().then(data => this.messages.push(data)));
-                    this.text = '';
-                }
+                    this.text = ''
+                }*/
             }
         }
     }
