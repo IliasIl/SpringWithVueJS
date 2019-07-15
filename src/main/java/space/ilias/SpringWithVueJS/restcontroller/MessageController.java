@@ -23,8 +23,8 @@ public class MessageController {
     @Autowired
     private NotFoundException notFound;
 
-    @GetMapping
     @JsonView(Views.IdName.class)
+    @GetMapping
     public List<Message> allMessages() {
         return messageRepo.findAll();
     }
@@ -42,7 +42,7 @@ public class MessageController {
         return messageRepo.save(message);
     }
 
-    @JsonView(Views.IdName.class)
+    @JsonView(Views.Full.class)
     @PutMapping("/{id}")
     public Message editMes(@PathVariable("id") Message message, @RequestBody Message messageNew) {
         BeanUtils.copyProperties(messageNew, message, "id");
@@ -57,6 +57,15 @@ public class MessageController {
     @MessageMapping("/changeMes")
     @SendTo("/topic/activity")
     public Message changeMes(Message message) {
+        message.setCreationDate(LocalDateTime.now());
         return messageRepo.save(message);
     }
+    @MessageMapping("/deleteMes")
+    @SendTo("/topic/delete")
+    public Message deleteMes(Message message){
+        messageRepo.delete(message);
+        return message;
+    }
+
+
 }
