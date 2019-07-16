@@ -1,11 +1,24 @@
 <template>
-    <div>
-        <div v-if="!profile">Необходимо войти через <a href="/login">Google</a></div>
-        <div v-else>
-            <div>{{profile.name}}&nbsp;<a href="/logout">Выйти</a></div>
-            <message-list :messages="messages"/>
-        </div>
-    </div>
+    <v-app>
+        <v-toolbar app>
+            <v-toolbar-title class="tols">IliterVue&nbsp;<v-icon>face</v-icon>
+            </v-toolbar-title>
+            <v-spacer></v-spacer>
+            <span v-if="profile">{{profile.name}}</span>
+            <v-btn v-if="profile" icon href="/logout">
+                <v-icon>exit_to_app</v-icon>
+            </v-btn>
+            <span v-if="!profile">
+                <span>Войти через </span>&nbsp;<a href="/login">Google</a>
+            </span>
+        </v-toolbar>
+
+        <v-content>
+            <v-container v-if="profile">
+                <message-list :messages="messages"/>
+            </v-container>
+        </v-content>
+    </v-app>
 </template>
 
 <script>
@@ -27,15 +40,15 @@
             addHandler(data => {
                     let index = getIndex(this.messages, data.id)
                     if (index > -1) {
-                    this.messages.splice(index, 1, data)
-                    } else{
+                        this.messages.splice(index, 1, data)
+                    } else {
                         this.messages.push(data)
                     }
                 }
             )
-            addHandler(data=> {
-                let index=getIndex(this.messages, data.id)
-                this.messages.splice(index, 1);
+            addHandler(data => {
+                    let index = getIndex(this.messages, data.id)
+                    this.messages.splice(index, 1);
 
                 }
             )
@@ -44,4 +57,7 @@
 </script>
 
 <style>
+    .tols {
+        color: indigo;
+    }
 </style>
