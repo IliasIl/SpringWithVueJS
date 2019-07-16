@@ -9,10 +9,14 @@ export function connect() {
     stompClient = Stomp.over(function () {
         return new SockJS('/gs-guide-websocket')
     })
+    stompClient.debug= () => {}
     stompClient.connect({}, frame => {
         console.log('connect to' + frame)
         stompClient.subscribe('/topic/activity', message => {
-            handlers.forEach(handler => handler(JSON.parse(message.body)))
+            handlers[0](JSON.parse(message.body))
+        })
+        stompClient.subscribe('/topic/delete', message => {
+            handlers[1](JSON.parse(message.body))
         })
     })
 }
@@ -30,4 +34,8 @@ export function disconnect() {
 
 export function sendMessage(message) {
     stompClient.send("/app/changeMes", {}, JSON.stringify(message))
+}
+
+export function deleteMessage(message) {
+    stompClient.send("/app/deleteMes", {}, JSON.stringify(message))
 }

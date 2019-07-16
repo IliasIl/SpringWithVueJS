@@ -1,14 +1,17 @@
 package space.ilias.SpringWithVueJS.domain;
 
+import org.springframework.boot.autoconfigure.security.oauth2.resource.PrincipalExtractor;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Map;
 
 @Entity
 @Table(name = "usr")
-public class User implements Serializable {
+public class User implements Serializable, PrincipalExtractor {
     @Id
     private String id;
     private String name;
@@ -75,5 +78,10 @@ public class User implements Serializable {
 
     public void setLastVisit(LocalDateTime lastVisit) {
         this.lastVisit = lastVisit;
+    }
+
+    @Override
+    public Object extractPrincipal(Map<String, Object> map) {
+        return null;
     }
 }

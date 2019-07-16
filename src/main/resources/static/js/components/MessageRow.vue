@@ -8,11 +8,13 @@
 </template>
 
 <script>
+    import {deleteMessage} from "util/ws";
+
     export default {
         props: ['messages', 'message', 'editMes', 'deleteMes'],
         methods: {
             del() {
-                this.deleteMes(this.message)
+               deleteMessage(this.message)
             },
             edit() {
                 this.editMes(this.message);
