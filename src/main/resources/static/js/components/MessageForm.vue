@@ -1,14 +1,17 @@
 <template>
-    <div>
-        <input type="text" placeholder="Введите сообщение" v-model="text"/>
-        <input type="button" @click="save" value="Сохранить"/>
-    </div>
+    <v-layout row>
+        <v-text-field label="Новое сообщение"
+                      placeholder="Введите сообщение"
+                      v-model="text"/>
+        <v-btn icon @click="save">
+            <v-icon>save</v-icon>
+        </v-btn>
+    </v-layout>
 </template>
 
 <script>
 
     import {sendMessage} from 'util/ws'
-    import {getIndex} from 'util/collections'
 
 
     export default {
@@ -28,9 +31,9 @@
         },
         methods: {
             save() {
-                sendMessage({id:this.id, text:this.text})
-                this.id=''
-                this.text=''
+                sendMessage({id: this.id, text: this.text})
+                this.id = ''
+                this.text = ''
                 /*
                 const mes = {text: this.text};
                 if (this.id) {
