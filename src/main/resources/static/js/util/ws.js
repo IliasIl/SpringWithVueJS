@@ -9,10 +9,11 @@ export function connect() {
     stompClient = Stomp.over(function () {
         return new SockJS('/gs-guide-websocket')
     })
-    stompClient.debug= () => {}
+    stompClient.debug= ()=>{}
     stompClient.connect({}, frame => {
         console.log('connect to' + frame)
         stompClient.subscribe('/topic/activity', message => {
+            console.log('send with helping webSocket '+message.body)
             handlers[0](JSON.parse(message.body))
         })
         stompClient.subscribe('/topic/delete', message => {

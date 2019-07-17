@@ -45,7 +45,7 @@
                         this.messages.push(data)
                     }
                 }
-            )
+            ),
             addHandler(data => {
                     let index = getIndex(this.messages, data.id)
                     this.messages.splice(index, 1);
