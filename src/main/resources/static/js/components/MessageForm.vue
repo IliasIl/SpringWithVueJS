@@ -10,9 +10,7 @@
 </template>
 
 <script>
-
-    import {sendMessage} from 'util/ws'
-
+    import messageApi from 'api/messages'
 
     export default {
         props: ['messages', 'messageA'],
@@ -31,27 +29,32 @@
         },
         methods: {
             save() {
-                sendMessage({id: this.id, text: this.text})
-                this.id = ''
-                this.text = ''
-                /*
-                const mes = {text: this.text};
+                const mes = {
+                    id: this.id,
+                    text: this.text
+                };
                 if (this.id) {
-                    this.$resource('/message{/id}').update({id: this.id}, mes)
+                    messageApi.update(mes)
                         .then(result => result.json()
                             .then(res => {
-                                    var index = getIndex(this.messages, this.id);
+                                    let index = this.messages.findIndex(elem => elem.id === res.id)
                                     this.messages.splice(index, 1, res);
-                                    this.id = '';
-                                    this.text = '';
                                 }
                             ));
 
                 } else {
-                    this.$resource('/message{/id}').save({}, mes)
-                        .then(result => result.json().then(data => this.messages.push(data)));
-                    this.text = ''
-                }*/
+                    messageApi.add(mes)
+                        .then(result => result.json().then(data => {
+                            let index = this.messages.findIndex(elem => elem.id === data.id);
+                            if (index > -1) {
+                                this.messages.splice(index, 1, data)
+                            } else {
+                                this.messages.push(data)
+                            }
+                        }));
+                }
+                this.id = ''
+                this.text = ''
             }
         }
     }

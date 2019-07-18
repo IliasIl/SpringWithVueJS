@@ -24,7 +24,6 @@
 <script>
     import MessageList from 'components/MessageList.vue'
     import {addHandler} from 'util/ws'
-    import {getIndex} from 'util/collections'
 
     export default {
         components: {
@@ -38,18 +37,29 @@
         },
         created() {
             addHandler(data => {
-                    let index = getIndex(this.messages, data.id)
-                    if (index > -1) {
-                        this.messages.splice(index, 1, data)
-                    } else {
-                        this.messages.push(data)
-                    }
-                }
-            ),
-            addHandler(data => {
-                    let index = getIndex(this.messages, data.id)
-                    this.messages.splice(index, 1);
+                    const index = this.messages.findIndex(a => a.id === data.payload.id)
+                    if (data.objectType === 'MESSAGE') {
+                        switch (data.eventClass) {
+                            case 'CREATE':
+                            case 'UPDATE':
+                                if(index>-1){
+                                    this.messages.splice(index, 1, data.payload)
+                                } else {
+                                    this.messages.push(data.payload)
+                                }
+                                break
+                            case 'REMOVE':
+                                if (index > -1) {
+                                    this.messages.splice(index, 1)
+                                }
+                                break
+                            default:
+                                console.error(`Misunderstand type ${data.objectType}`)
+                        }
 
+                    } else {
+                        console.error(`ERROR in handler: "${data.objectType}"`)
+                    }
                 }
             )
         }
