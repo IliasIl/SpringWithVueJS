@@ -50,7 +50,7 @@ export default new Vuex.Store({
         async updateMessagesActions({commit, state}, message) {
             const result = await MessageApi.update(message)
             const data = await result.json()
-            commit('updateMessagesMutations', message)
+            commit('updateMessagesMutations', data)
         },
         async removeMessagesActions({commit, state}, message) {
             const result = await MessageApi.remove(message.id)
