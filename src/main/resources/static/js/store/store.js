@@ -12,7 +12,7 @@ export default new Vuex.Store({
     },
     getters: {
 
-        sortedMessages: state => state.messages.sort((a, b) => -(a.id - b.id))
+        sortedMessages: state => (state.messages || []).sort((a, b) => -(a.id - b.id))
 
     },
     mutations: {
