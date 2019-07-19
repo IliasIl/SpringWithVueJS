@@ -16,7 +16,7 @@
 <script>
 
     export default {
-        props: ['messages', 'message', 'editMes', 'deleteMes'],
+        props: ['message', 'editMes', 'deleteMes'],
         methods: {
             del() {
                 this.deleteMes(this.message)

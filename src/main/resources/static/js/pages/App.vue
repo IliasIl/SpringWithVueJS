@@ -15,7 +15,7 @@
 
         <v-content>
             <v-container v-if="profile">
-                <message-list :messages="messages"/>
+                <message-list/>
             </v-container>
         </v-content>
     </v-app>
@@ -24,34 +24,28 @@
 <script>
     import MessageList from 'components/MessageList.vue'
     import {addHandler} from 'util/ws'
+    import {mapState, mapMutations} from 'vuex'
 
     export default {
         components: {
             MessageList
         },
-        data() {
-            return {
-                profile: valuesMas.profile,
-                messages: valuesMas.comp
-            }
+        computed:  mapState(['profile']),
+        methods: {
+            ...mapMutations(['addMessagesMutations', 'updateMessagesMutations', 'removeMessagesMutations'])
         },
         created() {
             addHandler(data => {
-                    const index = this.messages.findIndex(a => a.id === data.payload.id)
                     if (data.objectType === 'MESSAGE') {
                         switch (data.eventClass) {
                             case 'CREATE':
+                                this.addMessagesMutations(data.payload)
+                                break
                             case 'UPDATE':
-                                if(index>-1){
-                                    this.messages.splice(index, 1, data.payload)
-                                } else {
-                                    this.messages.push(data.payload)
-                                }
+                                this.updateMessagesMutations(data.payload)
                                 break
                             case 'REMOVE':
-                                if (index > -1) {
-                                    this.messages.splice(index, 1)
-                                }
+                                this.removeMessagesMutations(data.payload)
                                 break
                             default:
                                 console.error(`Misunderstand type ${data.objectType}`)
