@@ -3,36 +3,31 @@
         <v-toolbar app>
             <v-toolbar-title class="tols">IliterVue&nbsp;<v-icon>face</v-icon>
             </v-toolbar-title>
+            <v-btn round v-if="profile" @click="showMessages" flat :disabled="$route.path==='/'">Messages</v-btn>
             <v-spacer></v-spacer>
-            <span v-if="profile">{{profile.name}}</span>
+            <v-btn round v-if="profile" @click="showProfile" flat :disabled="$route.path==='/profile'">{{profile.name}}</v-btn>
             <v-btn v-if="profile" icon href="/logout">
                 <v-icon>exit_to_app</v-icon>
             </v-btn>
-            <span v-if="!profile">
-                <span>Войти через </span>&nbsp;<a href="/login">Google</a>
-            </span>
         </v-toolbar>
 
         <v-content>
-            <v-container v-if="profile">
-                <message-list/>
-            </v-container>
+            <router-view></router-view>
         </v-content>
     </v-app>
 </template>
 
 <script>
-    import MessageList from 'components/MessageList.vue'
     import {addHandler} from 'util/ws'
-    import {mapState, mapMutations} from 'vuex'
+    import {mapMutations, mapState} from 'vuex'
 
     export default {
-        components: {
-            MessageList
-        },
-        computed:  mapState(['profile']),
+        computed: mapState(['profile']),
         methods: {
-            ...mapMutations(['addMessagesMutations', 'updateMessagesMutations', 'removeMessagesMutations'])
+            ...mapMutations(['addMessagesMutations', 'updateMessagesMutations', 'removeMessagesMutations']),
+            showMessages (){this.$router.push('/')},
+            showProfile (){this.$router.push('/profile')}
+
         },
         created() {
             addHandler(data => {
@@ -56,6 +51,12 @@
                     }
                 }
             )
+        },
+        beforeMount() {
+            if (!this.profile) {
+                this.$router.replace('/auth')
+            }
+
         }
     }
 </script>

@@ -1,19 +1,21 @@
 <template>
-    <v-layout align-space-around justify-start column>
-        <message-form :messageA="message"></message-form>
-        <message-row
-                v-for="message in sortedMessages"
-                :message="message"
-                :editMes="editMes"
-                :key="message.id"
-                :deleteMes="deleteMes">
-        </message-row>
-    </v-layout>
+    <v-container>
+        <v-layout align-space-around justify-start column>
+            <message-form :messageA="message"></message-form>
+            <message-row
+                    v-for="message in sortedMessages"
+                    :message="message"
+                    :editMes="editMes"
+                    :key="message.id"
+                    :deleteMes="deleteMes">
+            </message-row>
+        </v-layout>
+    </v-container>
 </template>
 
 <script>
-    import MessageForm from 'components/MessageForm.vue'
-    import MessageRow from 'components/MessageRow.vue'
+    import MessageForm from '../components/MessageForm.vue'
+    import MessageRow from '../components/MessageRow.vue'
     import {mapActions, mapGetters} from 'vuex'
 
     export default {

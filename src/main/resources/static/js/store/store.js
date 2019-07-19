@@ -12,7 +12,7 @@ export default new Vuex.Store({
     },
     getters: {
 
-        sortedMessages: state => state.messages.sort((a, b) => -(a.id - b.id))
+        sortedMessages: state => (state.messages || []).sort((a, b) => -(a.id - b.id))
 
     },
     mutations: {
@@ -50,7 +50,7 @@ export default new Vuex.Store({
         async updateMessagesActions({commit, state}, message) {
             const result = await MessageApi.update(message)
             const data = await result.json()
-            commit('updateMessagesMutations', message)
+            commit('updateMessagesMutations', data)
         },
         async removeMessagesActions({commit, state}, message) {
             const result = await MessageApi.remove(message.id)
