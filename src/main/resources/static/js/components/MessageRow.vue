@@ -14,13 +14,12 @@
 </template>
 
 <script>
-    import {deleteMessage} from "util/ws";
 
     export default {
-        props: ['messages', 'message', 'editMes', 'deleteMes'],
+        props: ['message', 'editMes', 'deleteMes'],
         methods: {
             del() {
-                deleteMessage(this.message)
+                this.deleteMes(this.message)
             },
             edit() {
                 this.editMes(this.message);

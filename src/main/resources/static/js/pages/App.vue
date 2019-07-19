@@ -15,7 +15,7 @@
 
         <v-content>
             <v-container v-if="profile">
-                <message-list :messages="messages"/>
+                <message-list/>
             </v-container>
         </v-content>
     </v-app>
@@ -24,32 +24,36 @@
 <script>
     import MessageList from 'components/MessageList.vue'
     import {addHandler} from 'util/ws'
-    import {getIndex} from 'util/collections'
+    import {mapState, mapMutations} from 'vuex'
 
     export default {
         components: {
             MessageList
         },
-        data() {
-            return {
-                profile: valuesMas.profile,
-                messages: valuesMas.comp
-            }
+        computed:  mapState(['profile']),
+        methods: {
+            ...mapMutations(['addMessagesMutations', 'updateMessagesMutations', 'removeMessagesMutations'])
         },
         created() {
             addHandler(data => {
-                    let index = getIndex(this.messages, data.id)
-                    if (index > -1) {
-                        this.messages.splice(index, 1, data)
-                    } else {
-                        this.messages.push(data)
-                    }
-                }
-            ),
-            addHandler(data => {
-                    let index = getIndex(this.messages, data.id)
-                    this.messages.splice(index, 1);
+                    if (data.objectType === 'MESSAGE') {
+                        switch (data.eventClass) {
+                            case 'CREATE':
+                                this.addMessagesMutations(data.payload)
+                                break
+                            case 'UPDATE':
+                                this.updateMessagesMutations(data.payload)
+                                break
+                            case 'REMOVE':
+                                this.removeMessagesMutations(data.payload)
+                                break
+                            default:
+                                console.error(`Misunderstand type ${data.objectType}`)
+                        }
 
+                    } else {
+                        console.error(`ERROR in handler: "${data.objectType}"`)
+                    }
                 }
             )
         }

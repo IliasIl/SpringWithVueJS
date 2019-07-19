@@ -2,8 +2,6 @@ package space.ilias.SpringWithVueJS.restcontroller;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.BeanUtils;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.*;
 import space.ilias.SpringWithVueJS.domain.Message;
 import space.ilias.SpringWithVueJS.domain.Views;
@@ -59,7 +57,7 @@ public class MessageController {
     @JsonView(Views.Full.class)
     @PutMapping("/{id}")
     public Message editMes(@PathVariable("id") Message message, @RequestBody Message messageNew) {
-        BeanUtils.copyProperties(messageNew, message, "id");
+        BeanUtils.copyProperties(messageNew, message, "id", "creationDate");
         Message message1 = messageRepo.save(message);
         wsSender.accept(EventClass.UPDATE, message1);
         return message1;
@@ -71,18 +69,18 @@ public class MessageController {
         wsSender.accept(EventClass.REMOVE, message);
     }
 
-    @MessageMapping("/changeMes")
-    @SendTo("/topic/activity")
-    public Message changeMes(Message message) {
-        message.setCreationDate(LocalDateTime.now());
-        return messageRepo.save(message);
-    }
-    @MessageMapping("/deleteMes")
-    @SendTo("/topic/delete")
-    public Message deleteMes(Message message){
-        messageRepo.delete(message);
-        return message;
-    }
+//    @MessageMapping("/changeMes")
+//    @SendTo("/topic/activity")
+//    public Message changeMes(Message message) {
+//        message.setCreationDate(LocalDateTime.now());
+//        return messageRepo.save(message);
+//    }
+//    @MessageMapping("/deleteMes")
+//    @SendTo("/topic/delete")
+//    public Message deleteMes(Message message){
+//        messageRepo.delete(message);
+//        return message;
+//    }
 
 
 }
