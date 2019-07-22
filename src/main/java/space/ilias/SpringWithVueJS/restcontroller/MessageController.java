@@ -7,10 +7,11 @@ import space.ilias.SpringWithVueJS.domain.Message;
 import space.ilias.SpringWithVueJS.domain.Views;
 import space.ilias.SpringWithVueJS.domain.dto.EventClass;
 import space.ilias.SpringWithVueJS.domain.dto.ObjectType;
-import space.ilias.SpringWithVueJS.exceptions.NotFoundException;
 import space.ilias.SpringWithVueJS.repo.MessageRepo;
+import space.ilias.SpringWithVueJS.service.MessageService;
 import space.ilias.SpringWithVueJS.util.WsSender;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -19,16 +20,16 @@ import java.util.function.BiConsumer;
 @RequestMapping("/message")
 public class MessageController {
 
-    private final BiConsumer<EventClass, Message> wsSender;
+    private final MessageService messageService;
 
+    private final BiConsumer<EventClass, Message> wsSender;
     private final MessageRepo messageRepo;
 
-    private final NotFoundException notFound;
 
-    public MessageController(WsSender wsSender, MessageRepo messageRepo, NotFoundException notFound) {
+    public MessageController(MessageService messageService, WsSender wsSender, MessageRepo messageRepo) {
+        this.messageService = messageService;
         this.wsSender = wsSender.sendMessage(ObjectType.MESSAGE, Views.IdName.class);
         this.messageRepo = messageRepo;
-        this.notFound = notFound;
     }
 
     @JsonView(Views.IdName.class)
@@ -45,10 +46,10 @@ public class MessageController {
 
     @JsonView(Views.Full.class)
     @PostMapping
-    public Message createMes(@RequestBody Message message) {
+    public Message createMes(@RequestBody Message message) throws IOException {
         message.setCreationDate(LocalDateTime.now());
-
         Message save = messageRepo.save(message);
+        messageService.metaFill(save);
         wsSender.accept(EventClass.CREATE, message);
 
         return save;
@@ -56,9 +57,10 @@ public class MessageController {
 
     @JsonView(Views.Full.class)
     @PutMapping("/{id}")
-    public Message editMes(@PathVariable("id") Message message, @RequestBody Message messageNew) {
+    public Message editMes(@PathVariable("id") Message message, @RequestBody Message messageNew) throws IOException {
         BeanUtils.copyProperties(messageNew, message, "id", "creationDate");
         Message message1 = messageRepo.save(message);
+        messageService.metaFill(message1);
         wsSender.accept(EventClass.UPDATE, message1);
         return message1;
     }
@@ -69,18 +71,7 @@ public class MessageController {
         wsSender.accept(EventClass.REMOVE, message);
     }
 
-//    @MessageMapping("/changeMes")
-//    @SendTo("/topic/activity")
-//    public Message changeMes(Message message) {
-//        message.setCreationDate(LocalDateTime.now());
-//        return messageRepo.save(message);
-//    }
-//    @MessageMapping("/deleteMes")
-//    @SendTo("/topic/delete")
-//    public Message deleteMes(Message message){
-//        messageRepo.delete(message);
-//        return message;
-//    }
+
 
 
 }
