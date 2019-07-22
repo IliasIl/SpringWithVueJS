@@ -10,7 +10,6 @@
                 <v-icon>exit_to_app</v-icon>
             </v-btn>
         </v-toolbar>
-
         <v-content>
             <router-view></router-view>
         </v-content>
