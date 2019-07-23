@@ -8,6 +8,7 @@ import lombok.ToString;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table
@@ -29,6 +30,15 @@ public class Message {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime creationDate;
 
+    @ManyToOne
+    @JoinColumn(name="user_id")
+    @JsonView(Views.Full.class)
+    private User author;
+
+    @OneToMany(mappedBy = "message", orphanRemoval = true)
+    @JsonView(Views.Full.class)
+    private List<Comments> comments;
+
     @JsonView(Views.IdName.class)
     private String link;
     @JsonView(Views.IdName.class)
@@ -37,5 +47,6 @@ public class Message {
     private String linkDescription;
     @JsonView(Views.IdName.class)
     private String linkCover;
+
 
 }

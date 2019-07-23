@@ -2,8 +2,10 @@ package space.ilias.SpringWithVueJS.restcontroller;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.BeanUtils;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import space.ilias.SpringWithVueJS.domain.Message;
+import space.ilias.SpringWithVueJS.domain.User;
 import space.ilias.SpringWithVueJS.domain.Views;
 import space.ilias.SpringWithVueJS.domain.dto.EventClass;
 import space.ilias.SpringWithVueJS.domain.dto.ObjectType;
@@ -46,8 +48,9 @@ public class MessageController {
 
     @JsonView(Views.Full.class)
     @PostMapping
-    public Message createMes(@RequestBody Message message) throws IOException {
+    public Message createMes(@RequestBody Message message, @AuthenticationPrincipal User author) throws IOException {
         message.setCreationDate(LocalDateTime.now());
+        message.setAuthor(author);
         Message save = messageRepo.save(message);
         messageService.metaFill(save);
         wsSender.accept(EventClass.CREATE, message);
