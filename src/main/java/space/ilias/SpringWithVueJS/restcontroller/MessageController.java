@@ -1,6 +1,7 @@
 package space.ilias.SpringWithVueJS.restcontroller;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +19,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
 
+@Slf4j
 @RestController
 @RequestMapping("/message")
 public class MessageController {
@@ -61,7 +63,8 @@ public class MessageController {
     @JsonView(Views.Full.class)
     @PutMapping("/{id}")
     public Message editMes(@PathVariable("id") Message message, @RequestBody Message messageNew) throws IOException {
-        BeanUtils.copyProperties(messageNew, message, "id", "creationDate");
+        BeanUtils.copyProperties(messageNew, message, "id", "creationDate", "author", "comments");
+        log.info("text: {}, id: {}", messageNew.getText(), messageNew.getId());
         Message message1 = messageRepo.save(message);
         messageService.metaFill(message1);
         wsSender.accept(EventClass.UPDATE, message1);

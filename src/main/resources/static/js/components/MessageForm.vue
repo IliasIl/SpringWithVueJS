@@ -2,7 +2,8 @@
     <v-layout row>
         <v-text-field label="Новое сообщение"
                       placeholder="Введите сообщение"
-                      v-model="text"/>
+                      v-model="text"
+                      @keyup.enter="save"/>
         <v-btn icon @click="save">
             <v-icon>save</v-icon>
         </v-btn>
@@ -10,7 +11,7 @@
 </template>
 
 <script>
-    import { mapActions } from 'vuex'
+    import {mapActions} from 'vuex'
 
     export default {
         props: ['messageA'],
