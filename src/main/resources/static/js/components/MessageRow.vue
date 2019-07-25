@@ -14,14 +14,18 @@
                 <v-icon>delete</v-icon>
             </v-btn>
         </v-card-actions>
+        <comment-list :message-id="message.id" :comments="message.comments"/>
+        <comment-form :message-id="message.id"/>
     </v-card>
 </template>
 
 <script>
     import media from 'media/Media.vue'
+    import CommentList from 'components/comments/CommentsList.vue'
+    import CommentForm from 'components/comments/CommentsForm.vue'
     export default {
         components: {
-          media
+          media, CommentList, CommentForm
         },
         props: ['message', 'editMes', 'deleteMes'],
         methods: {

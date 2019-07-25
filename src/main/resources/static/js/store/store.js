@@ -1,12 +1,13 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import MessageApi from 'api/messages.js'
+import MessageApi from 'api/messages'
+import commentApi from 'api/comments'
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
     state: {
-        messages: valuesMas.comp,
+        messages: messagesString,
         profile: valuesMas.profile
 
     },
@@ -33,7 +34,16 @@ export default new Vuex.Store({
             if (index > -1) {
                 state.messages = [...state.messages.slice(0, index), ...state.messages.slice(index + 1)]
             }
-        }
+        },
+        addCommentsMutations(state, comment) {
+            const index = state.messages.findIndex(a => a.id === comment.messageId)
+            const message = state.messages[index]
+            state.messages = [...state.messages.slice(0, index), {
+                ...message,
+                comments: [...message.comments, comment
+                ]
+            }, ...state.messages.slice(index + 1)]
+        },
 
     },
     actions: {
@@ -57,6 +67,12 @@ export default new Vuex.Store({
             if (result.ok) {
                 commit('removeMessagesMutations', message)
             }
+        },
+        async addCommentsActions({commit, state}, comment) {
+            const result = await commentApi.add(comment)
+            const data = await result.json()
+
+            commit('addCommentsMutations', data)
         }
 
     }

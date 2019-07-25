@@ -23,20 +23,16 @@ public class User implements Serializable, PrincipalExtractor {
     @JsonView(Views.IdName.class)
     private String name;
 
-    @JsonView(Views.IdName.class)
+    @JsonView(Views.Full.class)
     private String userpic;
 
-    @JsonView(Views.Full.class)
     private String email;
 
-    @JsonView(Views.Full.class)
     private String gender;
 
-    @JsonView(Views.Full.class)
     private String locale;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
-    @JsonView(Views.Full.class)
     private LocalDateTime lastVisit;
 
 
