@@ -22,15 +22,16 @@ public class Comments implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "message_id", updatable = false, nullable = false)
+    @JsonView(Views.FullComments.class)
     private Message message;
 
     @ManyToOne
     @JoinColumn(name = "author_id")
-    @JsonView(Views.Full.class)
+    @JsonView(Views.FullComments.class)
     private User author;
 
     @Transient
-    @JsonView(Views.Full.class)
+    @JsonView(Views.FullComments.class)
     private long messageId;
 
 

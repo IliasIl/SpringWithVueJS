@@ -37,12 +37,22 @@ export default new Vuex.Store({
         },
         addCommentsMutations(state, comment) {
             const index = state.messages.findIndex(a => a.id === comment.messageId)
+            console.log(`${comment.message.id} text of the ${comment.messageId}`)
             const message = state.messages[index]
-            state.messages = [...state.messages.slice(0, index), {
-                ...message,
-                comments: [...message.comments, comment
-                ]
-            }, ...state.messages.slice(index + 1)]
+
+
+            if (message.comments) {
+                if (message.comments.findIndex(a => a.id === comment.id) === -1) {
+                    state.messages = [...state.messages.slice(0, index), {
+                        ...message,
+                        comments: [...message.comments, comment
+                        ]
+                    }, ...state.messages.slice(index + 1)]
+                }
+            } else {
+                state.messages = [...state.messages.slice(0, index),
+                    {...message, comments: [comment]}, ...state.messages.slice(index + 1)]
+            }
         },
 
     },
@@ -71,7 +81,6 @@ export default new Vuex.Store({
         async addCommentsActions({commit, state}, comment) {
             const result = await commentApi.add(comment)
             const data = await result.json()
-
             commit('addCommentsMutations', data)
         }
 

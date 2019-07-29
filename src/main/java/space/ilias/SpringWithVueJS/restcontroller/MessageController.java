@@ -30,7 +30,7 @@ public class MessageController {
     private final MessageRepo messageRepo;
 
 
-    public MessageController(MessageService messageService, WsSender wsSender) {
+    public MessageController(MessageService messageService, WsSender wsSender, MessageRepo messageRepo) {
         this.messageService = messageService;
         this.wsSender = wsSender.sendMessage(ObjectType.MESSAGE, Views.IdName.class);
         this.messageRepo = messageRepo;

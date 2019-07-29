@@ -23,7 +23,7 @@ public class User implements Serializable, PrincipalExtractor {
     @JsonView(Views.IdName.class)
     private String name;
 
-    @JsonView(Views.Full.class)
+    @JsonView(Views.IdName.class)
     private String userpic;
 
     private String email;

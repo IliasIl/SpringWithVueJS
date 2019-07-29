@@ -19,6 +19,7 @@
         },
         name: "CommentsList",
         props: ['comments', 'messageId']
+
     }
 </script>
 

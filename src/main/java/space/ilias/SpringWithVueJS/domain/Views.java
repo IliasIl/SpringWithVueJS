@@ -7,6 +7,7 @@ public final class Views {
     public interface IdName extends Id {
     }
 
+    public interface FullComments extends IdName{}
     public interface Full extends IdName {
     }
 }

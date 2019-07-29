@@ -1,7 +1,9 @@
 package space.ilias.SpringWithVueJS.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -16,6 +18,7 @@ import java.util.List;
 @Data
 @ToString(of = {"id", "text"})
 @EqualsAndHashCode(of = {"id"})
+@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class)
 public class Message implements Serializable {
 
     @Id
@@ -32,12 +35,12 @@ public class Message implements Serializable {
     private LocalDateTime creationDate;
 
     @ManyToOne
-    @JoinColumn(name="user_id")
-    @JsonView(Views.Full.class)
+    @JoinColumn(name = "user_id")
+    @JsonView(Views.IdName.class)
     private User author;
 
     @OneToMany(mappedBy = "message", orphanRemoval = true)
-    @JsonView(Views.Full.class)
+    @JsonView(Views.IdName.class)
     private List<Comments> comments;
 
     @JsonView(Views.IdName.class)

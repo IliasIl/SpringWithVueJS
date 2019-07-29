@@ -25,7 +25,7 @@ public class CommentsController {
     }
 
     @PostMapping
-    @JsonView(Views.Full.class)
+    @JsonView(Views.FullComments.class)
     public Comments createComment(@RequestBody Comments comments, @AuthenticationPrincipal User user) {
 
         comments.setMessageId(comments.getMessage().getId());

@@ -28,7 +28,7 @@ public class MainController {
     private String mod;
 
     public MainController(ObjectMapper mapper, MessageRepo messageRepo) {
-        this.writer = mapper.setConfig(mapper.getSerializationConfig()).writerWithView(Views.Full.class);
+        this.writer = mapper.setConfig(mapper.getSerializationConfig()).writerWithView(Views.FullComments.class);
         this.messageRepo = messageRepo;
     }
 
