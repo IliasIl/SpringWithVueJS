@@ -9,6 +9,7 @@
                     :key="message.id"
                     :deleteMes="deleteMes">
             </message-row>
+            <lazy-loader></lazy-loader>
         </v-layout>
     </v-container>
 </template>
@@ -17,9 +18,11 @@
     import MessageForm from '../components/MessageForm.vue'
     import MessageRow from '../components/MessageRow.vue'
     import {mapActions, mapGetters} from 'vuex'
+    import LazyLoader from "../components/LazyLoader.vue";
 
     export default {
         components: {
+            LazyLoader,
             MessageForm,
             MessageRow
         },
