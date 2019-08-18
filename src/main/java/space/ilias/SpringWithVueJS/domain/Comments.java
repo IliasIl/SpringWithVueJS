@@ -27,7 +27,7 @@ public class Comments implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "author_id")
-    @JsonView(Views.FullComments.class)
+    @JsonView(Views.IdName.class)
     private User author;
 
     @Transient

@@ -8,13 +8,10 @@ Vue.use(Vuex)
 export default new Vuex.Store({
     state: {
         messages: messagesString,
-        profile: valuesMas.profile
-
+        ...valuesMas
     },
     getters: {
-
         sortedMessages: state => (state.messages || []).sort((a, b) => -(a.id - b.id))
-
     },
     mutations: {
         addMessagesMutations(state, message) {
@@ -39,22 +36,34 @@ export default new Vuex.Store({
             const index = state.messages.findIndex(a => a.id === comment.messageId)
             console.log(`${comment.message.id} text of the ${comment.messageId}`)
             const message = state.messages[index]
-
-
-            if (message.comments) {
-                if (message.comments.findIndex(a => a.id === comment.id) === -1) {
-                    state.messages = [...state.messages.slice(0, index), {
-                        ...message,
-                        comments: [...message.comments, comment
-                        ]
-                    }, ...state.messages.slice(index + 1)]
+            if (index > 0) {
+                if (message.comments) {
+                    if (message.comments.findIndex(a => a.id === comment.id) === -1) {
+                        state.messages = [...state.messages.slice(0, index), {
+                            ...message,
+                            comments: [...message.comments, comment
+                            ]
+                        }, ...state.messages.slice(index + 1)]
+                    }
+                } else {
+                    state.messages = [...state.messages.slice(0, index),
+                        {...message, comments: [comment]}, ...state.messages.slice(index + 1)]
                 }
-            } else {
-                state.messages = [...state.messages.slice(0, index),
-                    {...message, comments: [comment]}, ...state.messages.slice(index + 1)]
             }
         },
-
+        loadMessagesInfo(state, message) {
+            const defaultMessages = state.messages.concat(message).reduce((res, val) => {
+                res[val.id] = val
+                return res
+            }, {})
+            state.messages = Object.values(defaultMessages)
+        },
+        changeTotalPages(state, totalPages) {
+            state.totalPages = totalPages
+        },
+        changeCurrentPage(state, currentPage) {
+            state.currentPage = currentPage
+        },
     },
     actions: {
         async addMessagesActions({commit, state}, message) {
@@ -82,6 +91,16 @@ export default new Vuex.Store({
             const result = await commentApi.add(comment)
             const data = await result.json()
             commit('addCommentsMutations', data)
+        },
+        async loadMessages({commit, state}) {
+            if (state.totalPages !== state.currentPage) {
+                const result = await MessageApi.page(state.currentPage + 1)
+                const data = await result.json()
+                console.log(`state.totalPages:=${state.totalPages} and state.currentPage:=${state.currentPage}`)
+                commit('loadMessagesInfo', data.messages)
+                commit('changeTotalPages', data.totalPages)
+                commit('changeCurrentPage', Math.min(data.totalPages, data.currentPage))
+            }
         }
 
     }
