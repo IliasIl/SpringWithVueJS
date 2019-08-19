@@ -38,13 +38,17 @@ public class User implements Serializable, PrincipalExtractor {
     private String locale;
 
     @JsonView(Views.FullProfile.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
+    private LocalDateTime lastVisit;
+
+    @JsonView(Views.FullProfile.class)
     @ManyToMany
     @JoinTable(
             name = "user_subscriptions",
             joinColumns = @JoinColumn(name = "subscriber_id"),
             inverseJoinColumns = @JoinColumn(name = "channel_id"))
     @JsonIdentityReference
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "id")
     private Set<User> subscription = new HashSet<>();
 
     @JsonView(Views.FullProfile.class)
@@ -55,12 +59,8 @@ public class User implements Serializable, PrincipalExtractor {
             inverseJoinColumns = @JoinColumn(name = "subscriber_id")
     )
     @JsonIdentityReference
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "id")
     private Set<User> subscribers = new HashSet<>();
-
-    @JsonView(Views.FullProfile.class)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
-    private LocalDateTime lastVisit;
 
 
     @Override
