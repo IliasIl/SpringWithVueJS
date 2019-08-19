@@ -5,7 +5,7 @@
             </v-toolbar-title>
             <v-btn round v-if="profile" @click="showMessages" flat :disabled="$route.path==='/'">Messages</v-btn>
             <v-spacer></v-spacer>
-            <v-btn round v-if="profile" @click="showProfile" flat :disabled="$route.path==='/profile'">
+            <v-btn round v-if="profile" @click="showProfile" flat :disabled="$route.path==='/user'">
                 {{profile.name}}
             </v-btn>
             <v-btn v-if="profile" icon href="/logout">
@@ -33,7 +33,7 @@
                 this.$router.push('/')
             },
             showProfile() {
-                this.$router.push('/profile')
+                this.$router.push('/user')
             }
 
         },
