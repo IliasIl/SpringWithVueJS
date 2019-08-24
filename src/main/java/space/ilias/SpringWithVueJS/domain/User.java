@@ -1,19 +1,26 @@
 package space.ilias.SpringWithVueJS.domain;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.annotation.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.PrincipalExtractor;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+
+import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 @Entity
 @Table(name = "usr")
 @Data
+@NoArgsConstructor
+@EqualsAndHashCode(of = "id")
+@ToString(of={"id", "name"})
+@SuppressWarnings("all")
 public class User implements Serializable, PrincipalExtractor {
 
     @Id
@@ -28,12 +35,38 @@ public class User implements Serializable, PrincipalExtractor {
 
     private String email;
 
+    @JsonView(Views.FullProfile.class)
     private String gender;
 
+    @JsonView(Views.FullProfile.class)
     private String locale;
 
+    @JsonView(Views.FullProfile.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
     private LocalDateTime lastVisit;
+
+    @JsonView(Views.FullProfile.class)
+    @ManyToMany
+    @JoinTable(
+            name = "user_subscriptions",
+            joinColumns = @JoinColumn(name = "subscriber_id"),
+            inverseJoinColumns = @JoinColumn(name = "channel_id"))
+    @JsonIdentityReference
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
+            property = "id")
+    private Set<User> subscription = new HashSet<>();
+
+    @JsonView(Views.FullProfile.class)
+    @ManyToMany
+    @JoinTable(
+            name = "user_subscriptions",
+            joinColumns = @JoinColumn(name = "channel_id"),
+            inverseJoinColumns = @JoinColumn(name = "subscriber_id")
+    )
+    @JsonIdentityReference
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
+            property = "id")
+    private Set<User> subscribers = new HashSet<>();
 
 
     @Override

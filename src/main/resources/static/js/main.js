@@ -8,7 +8,7 @@ import router from 'router/router'
 import {connect} from 'util/ws'
 import 'vuetify/dist/vuetify.min.css'
 
-if (valuesMas.profile) {
+if (profile) {
     connect()
 }
 Vue.use(Vuetify)

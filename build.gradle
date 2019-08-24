@@ -28,7 +28,7 @@ dependencies {
     compile 'org.springframework.boot:spring-boot-starter-security:2.1.4.RELEASE'
     compile 'org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:2.1.4.RELEASE'
     compile 'org.springframework.boot:spring-boot-starter-thymeleaf:2.1.2.RELEASE'
-    implementation 'org.springframework.session:spring-session-jdbc:2.1.7.RELEASE'
+    /*implementation 'org.springframework.session:spring-session-jdbc:2.1.7.RELEASE'*/
     compile 'org.postgresql:postgresql'
     compile 'org.jsoup:jsoup:1.12.1'
     compile 'org.projectlombok:lombok'

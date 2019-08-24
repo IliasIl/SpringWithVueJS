@@ -56,6 +56,7 @@ public class MessageController {
         return messageService.editMessage(message, messageNew);
     }
 
+    @JsonView(Views.Full.class)
     @DeleteMapping("/{id}")
     public void deleteMap(@PathVariable("id") Message message) {
         messageService.deleteMessage(message);

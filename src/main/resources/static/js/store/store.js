@@ -8,6 +8,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
     state: {
         messages: messagesString,
+        profile: profile,
         ...valuesMas
     },
     getters: {
@@ -34,9 +35,8 @@ export default new Vuex.Store({
         },
         addCommentsMutations(state, comment) {
             const index = state.messages.findIndex(a => a.id === comment.messageId)
-            console.log(`${comment.message.id} text of the ${comment.messageId}`)
             const message = state.messages[index]
-            if (index > 0) {
+            if (index > -1) {
                 if (message.comments) {
                     if (message.comments.findIndex(a => a.id === comment.id) === -1) {
                         state.messages = [...state.messages.slice(0, index), {
