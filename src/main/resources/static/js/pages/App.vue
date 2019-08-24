@@ -3,9 +3,9 @@
         <v-toolbar app>
             <v-toolbar-title class="tols">IliterVue&nbsp;<v-icon>face</v-icon>
             </v-toolbar-title>
-            <v-btn round v-if="profile" @click="showMessages" flat :disabled="$route.path==='/'">Messages</v-btn>
+            <v-btn round v-if="profile" @click="showMessages" flat :disabled="$route.path === '/'">Messages</v-btn>
             <v-spacer></v-spacer>
-            <v-btn round v-if="profile" @click="showProfile" flat :disabled="$route.path==='/user'">
+            <v-btn round v-if="profile" @click="showProfile" flat :disabled="showButton()">
                 {{profile.name}}
             </v-btn>
             <v-btn v-if="profile" icon href="/logout">
@@ -23,7 +23,9 @@
     import {mapMutations, mapState} from 'vuex'
 
     export default {
-        computed: mapState(['profile']),
+        computed:
+            mapState(['profile']),
+        
         methods: {
             ...mapMutations(['addMessagesMutations',
                 'updateMessagesMutations',
@@ -34,6 +36,10 @@
             },
             showProfile() {
                 this.$router.push('/user')
+            },
+            showButton() {
+                return this.$route.path === '/user' ||
+                    (this.$route.params && this.$route.params.id === this.profile.id)
             }
 
         },

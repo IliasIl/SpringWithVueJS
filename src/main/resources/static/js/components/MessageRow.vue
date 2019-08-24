@@ -1,16 +1,7 @@
 <template>
     <v-card class="my-2">
         <v-card-text primary-title>
-            <div class="pb-2">
-                <v-avatar v-if="message.author && message.author.userpic"
-                          size="36px">
-                    <v-img :src="message.author.userpic" :alt="message.author.name"/>
-                </v-avatar>
-                <v-avatar size="35px" color="indigo" v-else>
-                    <v-icon dark>account_circle</v-icon>
-                </v-avatar>
-                <span class="pl-2"> {{compMessage}}</span>
-            </div>
+            <link-profile :author="message.author" size="36"/>
             <div class="mx-5">
                 {{message.text}}
             </div>
@@ -34,9 +25,11 @@
     import media from 'media/Media.vue'
     import CommentList from 'components/comments/CommentsList.vue'
     import CommentForm from 'components/comments/CommentsForm.vue'
+    import LinkProfile from "components/LinkProfile.vue";
 
     export default {
         components: {
+            LinkProfile,
             media, CommentList, CommentForm
         },
         props: ['message', 'editMes', 'deleteMes'],
@@ -46,11 +39,6 @@
             },
             edit() {
                 this.editMes(this.message);
-            }
-        },
-        computed: {
-            compMessage() {
-                return this.message.author ? this.message.author.name : 'unknown'
             }
         }
     }
