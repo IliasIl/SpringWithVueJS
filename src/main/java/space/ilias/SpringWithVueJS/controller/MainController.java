@@ -18,6 +18,7 @@ import space.ilias.SpringWithVueJS.domain.Views;
 import space.ilias.SpringWithVueJS.domain.dto.MessagePortionDto;
 import space.ilias.SpringWithVueJS.restcontroller.MessageController;
 import space.ilias.SpringWithVueJS.service.MessageService;
+import space.ilias.SpringWithVueJS.service.ProfileService;
 
 import java.util.HashMap;
 
@@ -28,11 +29,14 @@ public class MainController {
     private final ObjectWriter writer;
     private final ObjectWriter writerProfile;
     private final MessageService messageService;
+    private final ProfileService profileService;
+
     @Value("${spring.profiles.active}")
     private String mod;
 
     @Autowired
-    public MainController(ObjectMapper mapper, MessageService messageService) {
+    public MainController(ObjectMapper mapper, MessageService messageService, ProfileService profileService) {
+        this.profileService = profileService;
         ObjectMapper objectMapper = mapper.setConfig(mapper.getSerializationConfig());
         this.writer = objectMapper.writerWithView(Views.FullComments.class);
         this.writerProfile = objectMapper.writerWithView(Views.Full.class);
@@ -43,19 +47,22 @@ public class MainController {
     public String retMainPage(@AuthenticationPrincipal User user, Model model) throws JsonProcessingException {
         HashMap<Object, Object> values = new HashMap<>();
         if (user != null) {
-            User user1 = user != null ? user : null;
+            User profileSec = profileService.findById(user.getId());
+            String profile = writerProfile.writeValueAsString(profileSec);
+            model.addAttribute("profile", profile);
+
             Sort sort = Sort.by(Sort.Direction.DESC, "id");
             PageRequest pageable = PageRequest.of(0, MessageController.MESSAGESPERPAGE, sort);
             MessagePortionDto mes = messageService.findAll(pageable) != null ? messageService.findAll(pageable) : null;
 
-            values.put("profile", (Object) user1);
             values.put("currentPage", mes.getCurrentPage());
             values.put("totalPages", mes.getTotalPages());
             String mesStr = writer.writeValueAsString(mes.getMessages());
+
             model.addAttribute("messages", mesStr);
 
         } else {
-            values.put("profile", null);
+            model.addAttribute("profile", "null");
             model.addAttribute("messages", "[]");
         }
 

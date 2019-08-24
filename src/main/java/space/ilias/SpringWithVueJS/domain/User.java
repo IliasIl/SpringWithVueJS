@@ -3,6 +3,8 @@ package space.ilias.SpringWithVueJS.domain;
 import com.fasterxml.jackson.annotation.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.PrincipalExtractor;
 
 import javax.persistence.*;
@@ -15,7 +17,9 @@ import java.util.Set;
 @Entity
 @Table(name = "usr")
 @Data
+@NoArgsConstructor
 @EqualsAndHashCode(of = "id")
+@ToString(of={"id", "name"})
 @SuppressWarnings("all")
 public class User implements Serializable, PrincipalExtractor {
 
@@ -48,7 +52,8 @@ public class User implements Serializable, PrincipalExtractor {
             joinColumns = @JoinColumn(name = "subscriber_id"),
             inverseJoinColumns = @JoinColumn(name = "channel_id"))
     @JsonIdentityReference
-    @JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "id")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
+            property = "id")
     private Set<User> subscription = new HashSet<>();
 
     @JsonView(Views.FullProfile.class)
@@ -59,7 +64,8 @@ public class User implements Serializable, PrincipalExtractor {
             inverseJoinColumns = @JoinColumn(name = "subscriber_id")
     )
     @JsonIdentityReference
-    @JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "id")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
+            property = "id")
     private Set<User> subscribers = new HashSet<>();
 
 
