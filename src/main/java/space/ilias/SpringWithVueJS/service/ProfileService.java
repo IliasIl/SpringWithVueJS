@@ -3,9 +3,11 @@ package space.ilias.SpringWithVueJS.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import space.ilias.SpringWithVueJS.domain.User;
+import space.ilias.SpringWithVueJS.domain.UserSubs;
 import space.ilias.SpringWithVueJS.repo.UserDetailsRepo;
 
-import java.util.Set;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ProfileService {
@@ -21,11 +23,16 @@ public class ProfileService {
     }
 
     public User changeSubscribe(User subscriber, User channelId) {
-        Set<User> subscribers = channelId.getSubscribers();
-        if (subscribers.contains(subscriber)) {
-            subscribers.remove(subscriber);
+        List<UserSubs> listSubs = channelId
+                .getSubscribers()
+                .stream()
+                .filter(subscribers -> subscribers.getSubscriberId().equals(subscriber))
+                .collect(Collectors.toList());
+        if (listSubs.isEmpty()) {
+            UserSubs userAdd = new UserSubs(channelId, subscriber);
+            channelId.getSubscribers().add(userAdd);
         } else {
-            subscribers.add(subscriber);
+            channelId.getSubscribers().removeAll(listSubs);
         }
         return userDetailsRepo.save(channelId);
     }

@@ -25,7 +25,7 @@
     export default {
         computed:
             mapState(['profile']),
-        
+
         methods: {
             ...mapMutations(['addMessagesMutations',
                 'updateMessagesMutations',

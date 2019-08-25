@@ -1,6 +1,7 @@
 package space.ilias.SpringWithVueJS.domain;
 
-import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonView;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -19,7 +20,7 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(of = "id")
-@ToString(of={"id", "name"})
+@ToString(of = {"id", "name"})
 @SuppressWarnings("all")
 public class User implements Serializable, PrincipalExtractor {
 
@@ -46,27 +47,12 @@ public class User implements Serializable, PrincipalExtractor {
     private LocalDateTime lastVisit;
 
     @JsonView(Views.FullProfile.class)
-    @ManyToMany
-    @JoinTable(
-            name = "user_subscriptions",
-            joinColumns = @JoinColumn(name = "subscriber_id"),
-            inverseJoinColumns = @JoinColumn(name = "channel_id"))
-    @JsonIdentityReference
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
-            property = "id")
-    private Set<User> subscription = new HashSet<>();
+    @OneToMany(mappedBy = "subscriberId", orphanRemoval = true)
+    private Set<UserSubs> subscription = new HashSet<>();
 
     @JsonView(Views.FullProfile.class)
-    @ManyToMany
-    @JoinTable(
-            name = "user_subscriptions",
-            joinColumns = @JoinColumn(name = "channel_id"),
-            inverseJoinColumns = @JoinColumn(name = "subscriber_id")
-    )
-    @JsonIdentityReference
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
-            property = "id")
-    private Set<User> subscribers = new HashSet<>();
+    @OneToMany(mappedBy = "channelId", orphanRemoval = true, cascade = CascadeType.ALL)
+    private Set<UserSubs> subscribers = new HashSet<>();
 
 
     @Override
