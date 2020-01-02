@@ -54,7 +54,6 @@ public class User implements Serializable, PrincipalExtractor {
     @OneToMany(mappedBy = "channelId", orphanRemoval = true, cascade = CascadeType.ALL)
     private Set<UserSubs> subscribers = new HashSet<>();
 
-
     @Override
     public Object extractPrincipal(Map<String, Object> map) {
         return null;

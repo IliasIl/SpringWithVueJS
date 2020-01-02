@@ -6,9 +6,11 @@ import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import space.ilias.SpringWithVueJS.domain.Message;
+import space.ilias.SpringWithVueJS.domain.User;
+
+import java.util.List;
 
 @Repository
 public interface MessageRepo extends JpaRepository<Message, Long> {
-    @EntityGraph(attributePaths = {"comments"})
-    Page<Message> findAll(Pageable pageable);
+    Page<Message> findByAuthorIn(List<User> author, Pageable pageable);
 }

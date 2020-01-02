@@ -53,9 +53,9 @@ public class MainController {
 
             Sort sort = Sort.by(Sort.Direction.DESC, "id");
             PageRequest pageable = PageRequest.of(0, MessageController.MESSAGESPERPAGE, sort);
-            MessagePortionDto mes = messageService.findAll(pageable) != null ? messageService.findAll(pageable) : null;
+            MessagePortionDto mes = messageService.findAll(user, pageable);
 
-            values.put("currentPage", mes.getCurrentPage());
+            values.put("currentPage", 0);
             values.put("totalPages", mes.getTotalPages());
             String mesStr = writer.writeValueAsString(mes.getMessages());
 

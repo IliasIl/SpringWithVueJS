@@ -1,11 +1,9 @@
 package space.ilias.SpringWithVueJS.domain;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonView;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.*;
@@ -18,6 +16,8 @@ import java.util.List;
 @Data
 @ToString(of = {"id", "text"})
 @EqualsAndHashCode(of = {"id"})
+@NoArgsConstructor
+@JsonIdentityReference
 @JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class)
 public class Message implements Serializable {
 
@@ -39,7 +39,7 @@ public class Message implements Serializable {
     @JsonView(Views.IdName.class)
     private User author;
 
-    @OneToMany(mappedBy = "message", orphanRemoval = true)
+    @OneToMany(mappedBy = "message", orphanRemoval = true, fetch = FetchType.EAGER)
     @JsonView(Views.IdName.class)
     private List<Comments> comments;
 

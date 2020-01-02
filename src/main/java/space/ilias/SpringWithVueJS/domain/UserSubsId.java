@@ -6,12 +6,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Embeddable;
+import java.io.Serializable;
 
 @Embeddable
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserSubsId {
+public class UserSubsId implements Serializable {
     @JsonView(Views.Id.class)
     private String channelId;
 

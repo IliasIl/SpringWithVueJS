@@ -30,8 +30,17 @@
                             <v-flex>{{profile.lastVisit}}</v-flex>
                             <v-flex>{{profile.gender}}</v-flex>
                             <v-flex>{{profile.locale}}</v-flex>
-                            <v-flex><span>Подписки:&nbsp;</span>{{profile.subscription && profile.subscription.length}}</v-flex>
-                            <v-flex><span>Подписчики:&nbsp;</span>{{profile.subscribers && profile.subscribers.length}}</v-flex>
+
+                            <router-link v-if="myProfile" :to="`/subscribers/${profile.id}`">
+                                <span>Подписчики: {{profile.subscribers && profile.subscribers.length}}</span>
+                            </router-link>
+                            <v-flex v-else><span>Подписчики:&nbsp;</span>{{profile.subscribers &&
+                                profile.subscribers.length}}
+                            </v-flex>
+
+                            <v-flex>
+                                <span>Подписки:&nbsp;</span>{{profile.subscription && profile.subscription.length}}
+                            </v-flex>
                         </v-layout>
                     </v-flex>
                 </v-layout>
@@ -44,11 +53,9 @@
 </template>
 
 <script>
-    import {mapState} from 'vuex'
     import profileApi from 'api/profile'
 
     export default {
-        computed: mapState(['profile']),
         data() {
             return {
                 profile: {}
@@ -63,7 +70,7 @@
         computed: {
             isSubscribe() {
                 return this.profile.subscribers &&
-                    this.profile.subscribers.find(subscriber => subscriber.id === this.$store.state.profile.id)
+                    this.profile.subscribers.find(subscriber => subscriber.subscriberId === this.$store.state.profile.id)
 
             },
             myProfile() {
@@ -80,7 +87,6 @@
                 const id = this.profile.id
                 const result = await profileApi.editSubscribe(id)
                 this.profile = await result.json()
-
             }
         },
         beforeMount() {

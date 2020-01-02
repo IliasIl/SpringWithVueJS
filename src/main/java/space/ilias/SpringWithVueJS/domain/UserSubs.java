@@ -1,10 +1,7 @@
 package space.ilias.SpringWithVueJS.domain;
 
 import com.fasterxml.jackson.annotation.*;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
@@ -38,6 +35,7 @@ public class UserSubs {
     @ManyToOne
     private User subscriberId;
 
+    @JsonView(Views.IdName.class)
     private boolean active;
 
     public UserSubs(User channelId, User subscriberId) {

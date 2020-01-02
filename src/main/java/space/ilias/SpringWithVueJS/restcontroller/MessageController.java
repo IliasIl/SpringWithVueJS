@@ -31,10 +31,9 @@ public class MessageController {
     @JsonView(Views.Full.class)
     @GetMapping
     public MessagePortionDto allMessages(
-            @PageableDefault(size = MESSAGESPERPAGE,
-                    sort = {"id"},
-                    direction = Sort.Direction.DESC) Pageable pageable) {
-        MessagePortionDto messages = messageService.findAll(pageable) != null ? messageService.findAll(pageable) : null;
+            @PageableDefault(size = MESSAGESPERPAGE, sort = {"id"}, direction = Sort.Direction.DESC)
+                    Pageable pageable, @AuthenticationPrincipal User user) {
+        MessagePortionDto messages = messageService.findAll(user, pageable) != null ? messageService.findAll(user, pageable) : null;
         return messages;
     }
 
